@@ -1,0 +1,23 @@
+WITH
+  CTE AS (
+  SELECT
+    TargetCompID,
+    COUNT(*) AS tx_counts,
+    ROUND(SUM(Quantity * StrikePrice), 2) AS total_value
+  FROM
+    `bigquery-public-data.cymbal_investments.trade_capture_report`
+  WHERE
+    EXTRACT(year
+    FROM
+      TradeDate) = 2020
+  GROUP BY
+    TargetCompID )
+SELECT
+  *
+FROM
+  CTE
+ORDER BY
+  tx_counts DESC,
+  TargetCompID ASC
+LIMIT
+  10
